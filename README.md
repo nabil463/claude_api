@@ -1,4 +1,16 @@
 ## Claude Flask API 
-- create .env from .env.examaple
-- install dependencies from requirements.txt
-- start server with flask run
+
+# Setup the Virtual Environment
+- mkdir .venv
+- python3 -m venv ./.venv/
+- source .venv/bin/activate
+
+# Install dependencies from requirements.txt
+- python3 -m pip install -r ./venv/requirements.txt
+
+# Setup the .env file
+- Copy .env from .env.examaple
+- Set the Claude and ChatGPT Key
+
+# Start the server
+- flask run
