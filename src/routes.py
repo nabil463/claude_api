@@ -1,5 +1,5 @@
 from anthropic import Anthropic
-from flask import Blueprint,request,jsonify,current_app
+from flask import Blueprint,request,jsonify,current_app,render_template
 from openai import OpenAI
 import os
 
@@ -7,7 +7,7 @@ main = Blueprint('main', __name__)
 
 @main.route("/")
 def hello_world():
-    return "<p>Hello, World!</p>"
+    return render_template("index.html")
 
 @main.route("/claude",methods=['POST'])
 def output():
