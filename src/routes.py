@@ -1,5 +1,7 @@
 from anthropic import Anthropic
 from flask import Blueprint,request,jsonify,current_app
+from openai import OpenAI
+import os
 
 main = Blueprint('main', __name__)
 
@@ -11,7 +13,7 @@ def hello_world():
 def output():
 
         client = Anthropic(
-            api_key=current_app.config['CLAUDE_KEY'],
+            api_key=os.environ.get('ANTHROPIC_API_KEY')
         )
         
         data = request.get_json()
@@ -32,3 +34,27 @@ def output():
         }
         # Return the JSON response
         return jsonify(response_data)
+
+@main.route("/openai",methods=['POST'])
+def output1():
+    client = OpenAI(
+    api_key=current_app.config['CHATGPT_KEY'],
+    )
+
+    data = request.get_json()
+    question = data["message"]
+
+    chat_completion = client.chat.completions.create(
+    messages=[
+        {
+            "role": "user",
+            "content": question,
+        }
+    ],
+    model="gpt-3.5-turbo",
+    )
+    response_data = {
+            'output': chat_completion.choices[0].message.content
+        }
+        # Return the JSON response
+    return jsonify(response_data)
