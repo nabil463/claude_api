@@ -6,8 +6,16 @@ import os
 main = Blueprint('main', __name__)
 
 @main.route("/")
-def hello_world():
+def home_page():
     return render_template("index.html")
+
+@main.route("/model")
+def about_page():
+    return render_template("model.html")
+
+@main.route("/result")
+def result_page():
+    return render_template("result.html")
 
 @main.route("/claude",methods=['POST'])
 def output():

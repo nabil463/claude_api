@@ -6,7 +6,7 @@
 - source .venv/bin/activate
 
 # Install dependencies from requirements.txt
-- python3 -m pip install -r ./venv/requirements.txt
+- python3 -m pip install -r requirements.txt
 
 # Setup the .env file
 - Copy .env from .env.examaple
