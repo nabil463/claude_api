@@ -27,7 +27,7 @@ def output():
             api_key=os.environ.get('ANTHROPIC_API_KEY')
         )
         client2 = OpenAI(
-            api_key=current_app.config['CHATGPT_KEY'],
+            api_key=os.environ.get('OPEN_API_KEY'),
         )
         
         data = request.form["Symptom"]

@@ -11,10 +11,10 @@
   </head>
   <body style="font-family: 'Source Sans Pro'">
 
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(204, 0, 0);">
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4 py-1" style="background-color: rgb(204, 0, 0);">
       <div class="container-fluid ms-4">
         <a class="navbar-brand" href="/">
-          <img src="../static/assets/logo.png" width="25%" height="25%" alt="logo">
+          <img src="../static/assets/logo.png" width="20%" height="20%" alt="logo">
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,9 +22,9 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent" style="font-size: 25px">
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/">Home</a>
+              <a class="nav-link active" href="/">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link active" href="/model">Model</a>
@@ -41,27 +41,45 @@
     <div class="container">
       {% block content %}
 
-    <div class="input-box">
-      <form action="../llmresponse", method="POST">
-      <h1>Enter symptom:</h1>
-      <input type="text" id="Symptom" name="Symptom" placeholder="fever" required>
-      <button type="submit" formmethod="post">Submit</button>
-      </form>
-    </div>
-
-    <div class="output-box">
-      <h1>ChatGPT Output</h1>
-      <h1>{{ChatGPT_output}}</h1>
-    </div>
-
-    <div class="output-box">
-      <h1>ClaudeAI Output</h1>
-      <h1>{{ClaudeAI_output}}</h1>
-    </div>
+      <div>
+        <div class="container text-center">
+          <h1 class="display-1">OTC Demo</h1>
+          <div class="w-55 container text-center">
+            <p style="font-size: 1.3em;">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac ligula in ipsum consectetur malesuada. 
+              Aenean vitae enim aliquam, euismod erat at, imperdiet tellus. 
+              Etiam aliquet lacus velit, aliquam condimentum massa aliquet id. 
+              Proin ipsum eros, dictum non ex in, dignissim tempor ligula. 
+            </p>
+          </div>
+        </div>
+  
+  
+        <div class="form group">
+          <form action="/llmresponse", method="POST">
+            <div class="form-group mt-4 mb-2 w-50 mx-auto">
+              <label for="Symptom" style="font-size: 1.3em;">Enter Symptom</label>
+              <input type="text" class="form-control" id="Symptom" name="Symptom" placeholder="fever" required>
+              <button type="submit" class="btn btn-secondary mt-2 mb-4" id="symptom_button" >
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+  
+        <div class="card p-4 w-50 mx-auto">
+          <div class="row">
+              <p style="font-size: 1.2em;">ChatGPT Output: {{ChatGPT_output}}</p>
+              <p style="font-size: 1.2em;">ClaudeAI Output: {{ClaudeAI_output}}</p>
+              <!-- <p>FDA Output: {{FDA_output}}</p> -->
+          </div>
+        </div>
+      </div>
 
     {% endblock %}
   </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="../static/js/loader.js"></script>
   </body>
 </html>
