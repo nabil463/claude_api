@@ -1,13 +1,16 @@
 from anthropic import Anthropic
-from flask import Blueprint,request,jsonify,current_app,render_template
+from flask import Blueprint,request,current_app,render_template
 from openai import OpenAI
 import os
 
 main = Blueprint('main', __name__)
 
-@main.route("/")
+ChatGPT_output = ""
+ClaudeAI_output = ""
+
+@main.route("/", methods=['GET','POST'])
 def home_page():
-    return render_template("index.html")
+    return render_template("index.html", ChatGPT_output=ChatGPT_output, ClaudeAI_output=ClaudeAI_output)
 
 @main.route("/model")
 def about_page():
@@ -17,17 +20,20 @@ def about_page():
 def result_page():
     return render_template("result.html")
 
-@main.route("/claude",methods=['POST'])
+@main.route("/llmresponse",methods=['POST'])
 def output():
 
-        client = Anthropic(
+        client1 = Anthropic(
             api_key=os.environ.get('ANTHROPIC_API_KEY')
         )
+        client2 = OpenAI(
+            api_key=current_app.config['CHATGPT_KEY'],
+        )
         
-        data = request.get_json()
-        question = data["message"]
+        data = request.form["Symptom"]
+        question = f"Suggest an OTC medicine for {data} in one word"
         
-        message = client.messages.create(
+        message = client1.messages.create(
             model="claude-3-opus-20240229",
             max_tokens=1024,
             messages=[
@@ -37,32 +43,20 @@ def output():
         output = ''
         for data in message.content:
             output += data.text
-        response_data = {
-            'output': message.content[0].text
-        }
-        # Return the JSON response
-        return jsonify(response_data)
+        response_data1 = message.content[0].text
 
-@main.route("/openai",methods=['POST'])
-def output1():
-    client = OpenAI(
-    api_key=current_app.config['CHATGPT_KEY'],
-    )
-
-    data = request.get_json()
-    question = data["message"]
-
-    chat_completion = client.chat.completions.create(
-    messages=[
+        chat_completion = client2.chat.completions.create(
+        messages=[
         {
             "role": "user",
             "content": question,
         }
-    ],
-    model="gpt-3.5-turbo",
-    )
-    response_data = {
-            'output': chat_completion.choices[0].message.content
-        }
-        # Return the JSON response
-    return jsonify(response_data)
+        ],
+        model="gpt-3.5-turbo",
+        )
+        response_data2 = chat_completion.choices[0].message.content
+
+        ClaudeAI_output = response_data1
+        ChatGPT_output = response_data2
+        return render_template("index.html", ChatGPT_output=ChatGPT_output, ClaudeAI_output=ClaudeAI_output)
+
