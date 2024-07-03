@@ -66,12 +66,48 @@
             </div>
           </form>
         </div>
-  
+        
+        <div class="card p-2 w-50 mx-auto flex-row">
+          <div class="row p-2 w-15 mx-auto">
+            <p style="font-size: 1.2em;">ChatGPT 3.5 Turbo Output:</p>
+          </div>
+          <div class="row p-2 w-20 mx-auto">
+            <p style="font-size: 1.2em; font-weight: bolder;">{{ChatGPT_output}}</p>
+          </div>
+          <div class="match p-2 w-15 mx-auto">
+            {% if match_GPT==0 %}
+            <p style="font-size: 1.2em; font-weight: bold; color: darkgreen;">MATCH</p>
+            {% elif match_GPT==1 %}
+            <p style="font-size: 1.2em; font-weight: bold; color:darkred;">NO MATCH</p>
+            {% else %}
+            <p style="font-size: 1.2em;"></p>
+            {% endif %}
+          </div>
+          </div>
+          <div class="card p-2 w-50 mx-auto d-flex flex-row">
+            <div class="llm_row p-2 w-15 mx-auto">
+              <p style="font-size: 1.2em;">Claude 3 Opus Output: <strong>{{ClaudeAI_output}}</strong></p>
+            </div>
+            <div class="llm_row p-2 w-20 mx-auto">
+              <p style="font-size: 1.2em; font-weight: bolder;">{{ClaudeAI_output}}</p>
+            </div>
+            <div class="match p-2 w-15 mx-auto">
+              {% if match_Claude==0 %}
+              <p style="font-size: 1.2em; font-weight: bold; color: darkgreen;">MATCH</p>
+              {% elif match_Claude==1 %}
+              <p style="font-size: 1.2em; font-weight: bold; color:darkred;">NO MATCH</p>
+              {% else %}
+              <p style="font-size: 1.2em;"></p>
+              {% endif %}
+            </div>
+        </div>
+
         <div class="card p-4 w-50 mx-auto">
           <div class="row">
-              <p style="font-size: 1.2em;">ChatGPT Output: {{ChatGPT_output}}</p>
-              <p style="font-size: 1.2em;">ClaudeAI Output: {{ClaudeAI_output}}</p>
-              <!-- <p>FDA Output: {{FDA_output}}</p> -->
+              <p style="font-size: 1.2em;">FDA Output: {{FDA_Output}}</p>
+              {% if FDA_Output != [] %}
+              <p style="font-size: 1.0em; font-weight:100;">(Truncated)</p>
+              {% endif %}
           </div>
         </div>
       </div>
