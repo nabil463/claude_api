@@ -1,4 +1,30 @@
 {% extends "index.html" %} 
 {% block content %}
-<h1>Result,World</h1>
+
+<div class="table-responsive">
+<table class="table table-bordered table-hover" style="width: 100%;">
+    <thead>
+        <tr>
+            <th>Test Case</th>
+            <th>FDA Output</th>
+            <th>ChatGPT Output</th>
+            <th>ChatGPT Match</th>
+            <th>ClaudeAI Output</th>
+            <th>ClaudeAI Match</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in range(0,144) %}
+           <tr>
+                <td>{{data[i*7+1]}}</td>
+                <td>{{data[i*7+2][:5]}}</td>
+                {% for j in range(i*7+3,i*7+7) %}
+                    <td>{{data[j]}}</td>
+                {% endfor %}
+           </tr>
+       {% endfor %}
+    </tbody>
+</table>
+</div>
+
 {% endblock %}

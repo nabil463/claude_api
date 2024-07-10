@@ -1,4 +1,4 @@
-# from anthropic import Anthropic
+from anthropic import Anthropic
 from flask import Blueprint,request,current_app,render_template
 from openai import OpenAI
 import pandas as pd
@@ -15,7 +15,7 @@ match_GPT = -1
 match_Claude = -1
 
 def symptom_filter(symptom):
-  filtered_df = df[df['purpose'].str.contains(f"{symptom}", case=False, na=False)]
+  filtered_df = df[df['purpose'].str.contains(f"{symptom}", case=False, na=False, regex=False)]
   #uniques generic names for tests
   unique_generic = filtered_df['generic_name'].unique().tolist()
   unique_generic_lower = [generic.lower() for generic in unique_generic]
@@ -47,14 +47,16 @@ def about_page():
 
 @main.route("/result")
 def result_page():
-    return render_template("result.html")
+    item = ['Test Case', 'FDA Output', 'ChatGPT Output', 'ChatGPT Match', 'ClaudeAI Output', 'ClaudeAI Match']
+    df = pd.read_csv('src/static/complete.csv')
+    return render_template("result.html", data = list(df.values.flatten()), item=item)
 
 @main.route("/llmresponse",methods=['POST'])
 def output():
 
-        # client1 = Anthropic(
-        #     api_key=os.environ.get('ANTHROPIC_API_KEY')
-        # )
+        client1 = Anthropic(
+            api_key=os.environ.get('ANTHROPIC_API_KEY')
+        )
         client2 = OpenAI(
             api_key=os.environ.get('OPEN_API_KEY'),
         )
@@ -62,17 +64,18 @@ def output():
         data = request.form["Symptom"]
         question = f"Recommend an over the counter generic medication for the symptoms of {data}: 1 word"
         
-        # message = client1.messages.create(
-        #     model="claude-3-opus-20240229",
-        #     max_tokens=1024,
-        #     messages=[
-        #         {"role": "user", "content": question}
-        #     ]
-        # )
-        # output = ''
-        # for data in message.content:
-        #     output += data.text
-        # response_data1 = message.content[0].text.lower()
+        message = client1.messages.create(
+            model="claude-3-opus-20240229",
+            max_tokens=1024,
+            messages=[
+                {"role": "user", "content": question}
+            ]
+        )
+        output = ''
+        for m in message.content:
+            output += m.text
+        response_data1 = message.content[0].text.lower()
+        response_data1 = re.sub(r'\W', '', response_data1)
 
         chat_completion = client2.chat.completions.create(
         messages=[
@@ -88,13 +91,18 @@ def output():
         
         FDA_Output = symptom_filter(data)
         FDA_Output_Check = FDA_list(FDA_Output)
-        # ClaudeAI_output = response_data1
+        ClaudeAI_output = response_data1
         ChatGPT_output = response_data2
 
         if check_word_in_list(response_data2, FDA_Output_Check):
             match_GPT = 0
         else:
             match_GPT = 1
+
+        if check_word_in_list(response_data1, FDA_Output_Check):
+            match_Claude = 0
+        else:
+            match_Claude = 1
         
         if len(FDA_Output) > 5:
             FDA_Output = FDA_Output[:5]
